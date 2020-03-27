@@ -1,37 +1,32 @@
-let splash = () => {
-    return new Promise(resolve) => {
-        fetch(`https://source.unsplash.com/`).then((response) => {   
-    let item = document.createElement('div');
-    item.classList.add('item');
-    item.innerHTML = `<img class="beach-image" src="${response.url}" alt="beach image"/>`     
-    document.body.appendChild(item);
-  }) 
-}
+$(document).ready(()=> {
+  let splash = new Promise((resolve, reject) => {
+    $("form").submit(function (event) {
+      event.preventDefault();
+      let result =$('#search').val();
+      resolve(result);
+      console.log(result)
+    });
+  });
+  splash.then(function (result) {
+    console.log(result);
+    let url = "https://api.unsplash.com/search/photos?";
+    let query = '&query=' + result;
+    let id = 'client_id=tpB9pEdcjD1RQP2B0UPmJDKTY5iU0_qN4ycx1oruQw8';
+    url += id + query;
+    console.log(url);
+    fetch(url)
+.then((response) => {
+  return response.json();
+})
+.then((data) => {
+    let returnedObject = data.results[0].urls.regular
+    console.log(returnedObject)
+    let returnedObject2 = data.results[1].urls.regular
+  $('#theDiv').prepend('<img id="theImg" src='+returnedObject+' />')
+  $('#theDiv2').prepend('<img id="theImg" src='+returnedObject2+' />')
+  
+    
+});
+  });
+});
 
-async function getSplash() {
-    const a = await splash();
-    const b = await splash();
-    return a, b; 
-}
-
-
-
-/* function renderItem(){
-  fetch(`https://source.unsplash.com/1600x900/?beach`).then((response) => {   
-    let item = document.createElement('div');
-    item.classList.add('item');
-    item.innerHTML = `<img class="beach-image" src="${response.url}" alt="beach image"/>`     
-    document.body.appendChild(item);
-  }) 
-}
-*/
-
-
-/* fetch('https://api.unsplash.com/').then(function(response) {
-            return response.json();
-        }).then(function(myJson) {
-            console.log(JSON.stringify(myJson));
-        })
-    }
-}
-*/
